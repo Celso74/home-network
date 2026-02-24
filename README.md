@@ -363,6 +363,34 @@ This eliminates double NAT for ~95% of traffic — the remaining ~5% is hairpin/
 
 ---
 
+## MikroTik Failsafe — Netwatch
+
+MikroTik monitors N100's DNS port (192.168.111.2:53) every 30 seconds via Netwatch entry `Phase3-N100-DNS-Monitor`.
+
+| Event | Action |
+|-------|--------|
+| N100 UP (port 53 responds) | DNS locked to 192.168.111.2 only · fake-IP route (198.18.0.0/15 → N100) enabled |
+| N100 DOWN (port 53 silent) | fake-IP route **disabled** (prevents traffic blackhole) · DNS **stays on N100** (no fallback to CN DNS) |
+
+**Why this design:**
+- Disabling the fake-IP route on DOWN means traffic to 198.18.x.x fake-IPs doesn't get blackholed — MikroTik stops routing them to a dead N100
+- DNS stays locked to N100 even when N100 is down — brief DNS timeouts (30–60s) during reboots are acceptable; the previous design leaked DNS to 223.5.5.5 during this window, which has been fixed
+- When N100 comes back up, Netwatch fires the UP script and everything restores automatically — no manual intervention needed
+
+**MikroTik Netwatch config (RouterOS):**
+```routeros
+/tool netwatch
+;;; Phase3-N100-DNS-Monitor
+host=192.168.111.2 port=53 interval=30s timeout=5s
+up-script="/ip dns set servers=192.168.111.2; \
+  /ip route enable [find comment=\"Phase2-FakeIP-to-N100\"]; \
+  /log warning \"NETWATCH: N100 UP - DNS locked to N100, fake-IP route enabled\""
+down-script="/ip route disable [find comment=\"Phase2-FakeIP-to-N100\"]; \
+  /log warning \"NETWATCH: N100 DOWN - fake-IP route disabled, DNS remains on N100\""
+```
+
+---
+
 ## Ralph Watchdog
 
 Safety daemon on N100. Arm before every config change. Auto-reverts and reboots if SSH or LuCI goes down within the timeout.
