@@ -1,0 +1,532 @@
+port: 7890
+socks-port: 7891
+mixed-port: 7893
+redir-port: 7892
+tproxy-port: 7895
+allow-lan: true
+mode: rule
+
+tun:
+  enable: true
+  stack: system
+  auto-route: true
+  auto-detect-interface: true
+  dns-hijack:
+    - any:53
+  mtu: 1500
+log-level: info
+external-controller: 0.0.0.0:9090
+secret: ""
+
+dns:
+  enable: true
+  listen: 0.0.0.0:7874
+  enhanced-mode: fake-ip
+  fake-ip-range: 198.18.0.0/16
+  fake-ip-filter:
+    - "*.lan"
+    - "*.local"
+    - "+.cn"
+    - "+.qlogo.cn"
+    - "+.jakeinitiativexx.free.hr"
+    - "+.baidu.com"
+    - "+.bilibili.com"
+    - "+.qq.com"
+    - "+.servicewechat.com"
+    - "+.weixinbridge.com"
+    - "+.myqcloud.com"
+    - "+.qcloud.com"
+    - "+.tencent.com"
+    - "+.wechat.com"
+    - "+.ruijie.com.cn"
+    - "+.ruijienetworks.com"
+    - "+.taobao.com"
+    - "+.tmall.com"
+    - "+.jd.com"
+    - "+.163.com"
+    - "+.126.com"
+    - "+.sina.com"
+    - "+.weibo.com"
+    - "+.douyin.com"
+    - "+.tiktok.com"
+    - "+.alipay.com"
+    - "+.csdn.net"
+  default-nameserver:
+    - 223.5.5.5
+    - 119.29.29.29
+  nameserver:
+    - 223.5.5.5
+    - 119.29.29.29
+
+  nameserver-policy:
+    "mini4k.com": 223.5.5.5
+    "+.mini4k.com": 223.5.5.5
+    "kimi.com": 223.5.5.5
+    "+.kimi.com": 223.5.5.5
+    "z.ai": 223.5.5.5
+    "+.z.ai": 223.5.5.5
+    # === PHASE 4F: Scoped DoH (OpenAI, OpenRouter, NotebookLM, AtlasMind ONLY) ===
+    # OpenAI
+    "openai.com": "https://1.1.1.1/dns-query#JP-TUIC"
+    "+.openai.com": "https://1.1.1.1/dns-query#JP-TUIC"
+    "oaistatic.com": "https://1.1.1.1/dns-query#JP-TUIC"
+    "+.oaistatic.com": "https://1.1.1.1/dns-query#JP-TUIC"
+    "oaiusercontent.com": "https://1.1.1.1/dns-query#JP-TUIC"
+    "+.oaiusercontent.com": "https://1.1.1.1/dns-query#JP-TUIC"
+    # OpenRouter
+    "openrouter.ai": "https://1.1.1.1/dns-query#JP-TUIC"
+    "+.openrouter.ai": "https://1.1.1.1/dns-query#JP-TUIC"
+    # NotebookLM
+    "notebooklm.google.com": "https://1.1.1.1/dns-query#JP-TUIC"
+    # AtlasMind
+    "atlasmind.space": "https://1.1.1.1/dns-query#JP-TUIC"
+    "+.atlasmind.space": "https://1.1.1.1/dns-query#JP-TUIC"
+    # === PHASE 5G: Google DoH via JP ===
+    "+.google.com": "https://1.1.1.1/dns-query#JP-TUIC"
+    "+.gmail.com": "https://1.1.1.1/dns-query#JP-TUIC"
+    "+.googleapis.com": "https://1.1.1.1/dns-query#JP-TUIC"
+    "+.gstatic.com": "https://1.1.1.1/dns-query#JP-TUIC"
+    "+.googleusercontent.com": "https://1.1.1.1/dns-query#JP-TUIC"
+    "+.googlevideo.com": "https://1.1.1.1/dns-query#JP-TUIC"
+    "+.ytimg.com": "https://1.1.1.1/dns-query#JP-TUIC"
+    # === PHASE 6W2: YouTube + Google CDN gaps ===
+    "+.youtube.com": "https://1.1.1.1/dns-query#JP-TUIC"
+    "+.youtubei.googleapis.com": "https://1.1.1.1/dns-query#JP-TUIC"
+    "+.gvt1.com": "https://1.1.1.1/dns-query#JP-TUIC"
+    "+.ggpht.com": "https://1.1.1.1/dns-query#JP-TUIC"
+    # === PHASE 5L: LinkedIn Global ===
+    "linkedin.com": "https://1.1.1.1/dns-query#JP-TUIC"
+    "+.linkedin.com": "https://1.1.1.1/dns-query#JP-TUIC"
+    "licdn.com": "https://1.1.1.1/dns-query#JP-TUIC"
+    "+.licdn.com": "https://1.1.1.1/dns-query#JP-TUIC"
+    # === PHASE 9: Additional GFW-sensitive domains — prevent DNS poisoning ===
+    "github.com": "https://1.1.1.1/dns-query#JP-TUIC"
+    "+.github.com": "https://1.1.1.1/dns-query#JP-TUIC"
+    "githubusercontent.com": "https://1.1.1.1/dns-query#JP-TUIC"
+    "+.githubusercontent.com": "https://1.1.1.1/dns-query#JP-TUIC"
+    "twitter.com": "https://1.1.1.1/dns-query#JP-TUIC"
+    "+.twitter.com": "https://1.1.1.1/dns-query#JP-TUIC"
+    "x.com": "https://1.1.1.1/dns-query#JP-TUIC"
+    "+.x.com": "https://1.1.1.1/dns-query#JP-TUIC"
+    "twimg.com": "https://1.1.1.1/dns-query#JP-TUIC"
+    "+.twimg.com": "https://1.1.1.1/dns-query#JP-TUIC"
+    "telegram.org": "https://1.1.1.1/dns-query#JP-TUIC"
+    "+.telegram.org": "https://1.1.1.1/dns-query#JP-TUIC"
+    "t.me": "https://1.1.1.1/dns-query#JP-TUIC"
+    "discord.com": "https://1.1.1.1/dns-query#JP-TUIC"
+    "+.discord.com": "https://1.1.1.1/dns-query#JP-TUIC"
+    "discordapp.com": "https://1.1.1.1/dns-query#JP-TUIC"
+    "+.discordapp.com": "https://1.1.1.1/dns-query#JP-TUIC"
+    "reddit.com": "https://1.1.1.1/dns-query#JP-TUIC"
+    "+.reddit.com": "https://1.1.1.1/dns-query#JP-TUIC"
+    "redd.it": "https://1.1.1.1/dns-query#JP-TUIC"
+    "anthropic.com": "https://1.1.1.1/dns-query#JP-TUIC"
+    "+.anthropic.com": "https://1.1.1.1/dns-query#JP-TUIC"
+    "claude.ai": "https://1.1.1.1/dns-query#JP-TUIC"
+    "+.claude.ai": "https://1.1.1.1/dns-query#JP-TUIC"
+    "chatgpt.com": "https://1.1.1.1/dns-query#JP-TUIC"
+    "+.chatgpt.com": "https://1.1.1.1/dns-query#JP-TUIC"
+    # === PHASE 9D: Additional AI services DoH ===
+    "huggingface.co": "https://1.1.1.1/dns-query#JP-TUIC"
+    "+.huggingface.co": "https://1.1.1.1/dns-query#JP-TUIC"
+    # === END PHASE 4F ===
+
+proxies:
+  # === HYSTERIA2 (UDP-based, fastest for streaming) ===
+  - name: "JP-Hysteria2"
+    type: hysteria2
+    server: jp.jakeinitiativexx.free.hr
+    port: 27635
+    password: REDACTED
+    sni: jp.jakeinitiativexx.free.hr
+    skip-cert-verify: true
+    alpn:
+      - h3
+
+  # === TUIC (UDP-based with BBR) ===
+  - name: "JP-TUIC"
+    type: tuic
+    server: jp.jakeinitiativexx.free.hr
+    port: 43042
+    uuid: REDACTED
+    password: REDACTED
+    sni: jp.jakeinitiativexx.free.hr
+    skip-cert-verify: true
+    alpn:
+      - h3
+    udp-relay-mode: native
+    congestion-controller: bbr
+
+  # === REALITY NODES (TCP-based) ===
+  - name: "JP1-Reality"
+    type: vless
+    server: REDACTED_IP
+    port: 30187
+    uuid: REDACTED
+    tls: true
+    flow: xtls-rprx-vision
+    skip-cert-verify: true
+    servername: www.yahoo.com
+    client-fingerprint: chrome
+    network: tcp
+    udp: true
+    reality-opts:
+      public-key: REDACTED
+      short-id: "REDACTED"
+
+proxy-groups:
+  # Auto-select fastest node
+  # === PHASE 10: Dead proxy definitions SG1/TW1 removed from proxies list ===
+  # === PHASE 8: Cleaned AUTO-FAST — dead proxies removed (HY2, SG1, TW1) ===
+  - name: "AUTO-FAST"
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 180
+    tolerance: 100
+    proxies:
+      - "JP-TUIC"
+      - "JP1-Reality"
+
+  # Manual selection with AUTO-FAST as default
+  - name: "PROXY"
+    type: select
+    proxies:
+      - "AUTO-FAST"
+      - "JP1-Reality"
+      - "JP-Hysteria2"
+      - "JP-TUIC"
+      - "DIRECT"
+
+  # === PHASE 2: AI-PINNED GROUP (JP1-Reality only) ===
+  - name: "AI-PINNED"
+    type: select
+    proxies:
+      - "JP1-Reality"
+
+  # === PHASE 3: META-PINNED GROUP (JP1-Reality for FB/IG core) ===
+  - name: "META-PINNED"
+    type: select
+    proxies:
+      - "JP1-Reality"
+
+  # === PHASE 4E-A: JP_PIN_STABLE (AI + Google core, NO YouTube) ===
+  - name: "JP_PIN_STABLE"
+    type: select
+    proxies:
+      - "JP1-Reality"
+
+  # === CODEX Phase6Z2: Login-Stable failover group (Reality-only) ===
+  # === PHASE 8: Cleaned LOGIN_STABLE — dead proxies removed (SG1, TW1) ===
+  # === PHASE 9: type fallback → select (fallback with 1 member is meaningless) ===
+  - name: "LOGIN_STABLE"
+    type: select
+    proxies:
+      - "JP1-Reality"
+
+  # === PHASE 7H: Phone-only fallback group (TUIC>HY2>JP1-Reality) ===
+  - name: "PHONE-FAST"
+    type: fallback
+    url: https://connectivitycheck.gstatic.com/generate_204
+    interval: 180
+    proxies:
+      - "JP-TUIC"
+      - "JP-Hysteria2"
+      - "JP1-Reality"
+
+
+  # === PHASE 7J: Shield-pinned group (HOLY — never route shield elsewhere) ===
+  - name: "SHIELD-STABLE"
+    type: select
+    proxies:
+      - "JP1-Reality"
+
+rules:
+  # === PHASE 7J: Shield pinned — HOLY — DO NOT MOVE OR REMOVE ===
+  - SRC-IP-CIDR,192.168.111.183/32,SHIELD-STABLE
+  # === PHASE 7H-B1: iPhone Apple services via PHONE-FAST (proxy in CN) ===
+  - AND,((SRC-IP-CIDR,192.168.111.157/32),(DOMAIN-SUFFIX,apple.com)),PHONE-FAST
+  - AND,((SRC-IP-CIDR,192.168.111.157/32),(DOMAIN-SUFFIX,icloud.com)),PHONE-FAST
+  - AND,((SRC-IP-CIDR,192.168.111.157/32),(DOMAIN-SUFFIX,icloud-content.com)),PHONE-FAST
+  - AND,((SRC-IP-CIDR,192.168.111.157/32),(DOMAIN-SUFFIX,apple-dns.net)),PHONE-FAST
+  - AND,((SRC-IP-CIDR,192.168.111.157/32),(DOMAIN-SUFFIX,appstore.com)),PHONE-FAST
+  - AND,((SRC-IP-CIDR,192.168.111.157/32),(DOMAIN-SUFFIX,itunes.apple.com)),PHONE-FAST
+  - AND,((SRC-IP-CIDR,192.168.111.157/32),(DOMAIN-SUFFIX,me.com)),PHONE-FAST
+  # === PHASE 7H-B2: Phone foreign essentials via PHONE-FAST (all 4 phones) ===
+  # S22 Ultra (192.168.111.194)
+  - AND,((SRC-IP-CIDR,192.168.111.194/32),(DOMAIN-SUFFIX,google.com)),PHONE-FAST
+  - AND,((SRC-IP-CIDR,192.168.111.194/32),(DOMAIN-SUFFIX,googleapis.com)),PHONE-FAST
+  - AND,((SRC-IP-CIDR,192.168.111.194/32),(DOMAIN-SUFFIX,gstatic.com)),PHONE-FAST
+  - AND,((SRC-IP-CIDR,192.168.111.194/32),(DOMAIN-SUFFIX,googleusercontent.com)),PHONE-FAST
+  - AND,((SRC-IP-CIDR,192.168.111.194/32),(DOMAIN-SUFFIX,gvt1.com)),PHONE-FAST
+  - AND,((SRC-IP-CIDR,192.168.111.194/32),(DOMAIN-SUFFIX,youtube.com)),PHONE-FAST
+  - AND,((SRC-IP-CIDR,192.168.111.194/32),(DOMAIN-SUFFIX,googlevideo.com)),PHONE-FAST
+  - AND,((SRC-IP-CIDR,192.168.111.194/32),(DOMAIN-SUFFIX,ytimg.com)),PHONE-FAST
+  - AND,((SRC-IP-CIDR,192.168.111.194/32),(DOMAIN-SUFFIX,ggpht.com)),PHONE-FAST
+  - AND,((SRC-IP-CIDR,192.168.111.194/32),(DOMAIN-SUFFIX,gnews.com)),PHONE-FAST
+  - AND,((SRC-IP-CIDR,192.168.111.194/32),(DOMAIN-SUFFIX,whatsapp.com)),PHONE-FAST
+  - AND,((SRC-IP-CIDR,192.168.111.194/32),(DOMAIN-SUFFIX,whatsapp.net)),PHONE-FAST
+  - AND,((SRC-IP-CIDR,192.168.111.194/32),(DOMAIN-SUFFIX,linkedin.com)),PHONE-FAST
+  - AND,((SRC-IP-CIDR,192.168.111.194/32),(DOMAIN-SUFFIX,licdn.com)),PHONE-FAST
+  - AND,((SRC-IP-CIDR,192.168.111.194/32),(DOMAIN-SUFFIX,linkedinusercontent.com)),PHONE-FAST
+  # S8 (192.168.111.156)
+  - AND,((SRC-IP-CIDR,192.168.111.156/32),(DOMAIN-SUFFIX,google.com)),PHONE-FAST
+  - AND,((SRC-IP-CIDR,192.168.111.156/32),(DOMAIN-SUFFIX,googleapis.com)),PHONE-FAST
+  - AND,((SRC-IP-CIDR,192.168.111.156/32),(DOMAIN-SUFFIX,gstatic.com)),PHONE-FAST
+  - AND,((SRC-IP-CIDR,192.168.111.156/32),(DOMAIN-SUFFIX,googleusercontent.com)),PHONE-FAST
+  - AND,((SRC-IP-CIDR,192.168.111.156/32),(DOMAIN-SUFFIX,gvt1.com)),PHONE-FAST
+  - AND,((SRC-IP-CIDR,192.168.111.156/32),(DOMAIN-SUFFIX,youtube.com)),PHONE-FAST
+  - AND,((SRC-IP-CIDR,192.168.111.156/32),(DOMAIN-SUFFIX,googlevideo.com)),PHONE-FAST
+  - AND,((SRC-IP-CIDR,192.168.111.156/32),(DOMAIN-SUFFIX,ytimg.com)),PHONE-FAST
+  - AND,((SRC-IP-CIDR,192.168.111.156/32),(DOMAIN-SUFFIX,ggpht.com)),PHONE-FAST
+  - AND,((SRC-IP-CIDR,192.168.111.156/32),(DOMAIN-SUFFIX,gnews.com)),PHONE-FAST
+  - AND,((SRC-IP-CIDR,192.168.111.156/32),(DOMAIN-SUFFIX,whatsapp.com)),PHONE-FAST
+  - AND,((SRC-IP-CIDR,192.168.111.156/32),(DOMAIN-SUFFIX,whatsapp.net)),PHONE-FAST
+  - AND,((SRC-IP-CIDR,192.168.111.156/32),(DOMAIN-SUFFIX,linkedin.com)),PHONE-FAST
+  - AND,((SRC-IP-CIDR,192.168.111.156/32),(DOMAIN-SUFFIX,licdn.com)),PHONE-FAST
+  - AND,((SRC-IP-CIDR,192.168.111.156/32),(DOMAIN-SUFFIX,linkedinusercontent.com)),PHONE-FAST
+  # S8+ (192.168.111.155)
+  - AND,((SRC-IP-CIDR,192.168.111.155/32),(DOMAIN-SUFFIX,google.com)),PHONE-FAST
+  - AND,((SRC-IP-CIDR,192.168.111.155/32),(DOMAIN-SUFFIX,googleapis.com)),PHONE-FAST
+  - AND,((SRC-IP-CIDR,192.168.111.155/32),(DOMAIN-SUFFIX,gstatic.com)),PHONE-FAST
+  - AND,((SRC-IP-CIDR,192.168.111.155/32),(DOMAIN-SUFFIX,googleusercontent.com)),PHONE-FAST
+  - AND,((SRC-IP-CIDR,192.168.111.155/32),(DOMAIN-SUFFIX,gvt1.com)),PHONE-FAST
+  - AND,((SRC-IP-CIDR,192.168.111.155/32),(DOMAIN-SUFFIX,youtube.com)),PHONE-FAST
+  - AND,((SRC-IP-CIDR,192.168.111.155/32),(DOMAIN-SUFFIX,googlevideo.com)),PHONE-FAST
+  - AND,((SRC-IP-CIDR,192.168.111.155/32),(DOMAIN-SUFFIX,ytimg.com)),PHONE-FAST
+  - AND,((SRC-IP-CIDR,192.168.111.155/32),(DOMAIN-SUFFIX,ggpht.com)),PHONE-FAST
+  - AND,((SRC-IP-CIDR,192.168.111.155/32),(DOMAIN-SUFFIX,gnews.com)),PHONE-FAST
+  - AND,((SRC-IP-CIDR,192.168.111.155/32),(DOMAIN-SUFFIX,whatsapp.com)),PHONE-FAST
+  - AND,((SRC-IP-CIDR,192.168.111.155/32),(DOMAIN-SUFFIX,whatsapp.net)),PHONE-FAST
+  - AND,((SRC-IP-CIDR,192.168.111.155/32),(DOMAIN-SUFFIX,linkedin.com)),PHONE-FAST
+  - AND,((SRC-IP-CIDR,192.168.111.155/32),(DOMAIN-SUFFIX,licdn.com)),PHONE-FAST
+  - AND,((SRC-IP-CIDR,192.168.111.155/32),(DOMAIN-SUFFIX,linkedinusercontent.com)),PHONE-FAST
+  # iPhone (192.168.111.157)
+  - AND,((SRC-IP-CIDR,192.168.111.157/32),(DOMAIN-SUFFIX,google.com)),PHONE-FAST
+  - AND,((SRC-IP-CIDR,192.168.111.157/32),(DOMAIN-SUFFIX,googleapis.com)),PHONE-FAST
+  - AND,((SRC-IP-CIDR,192.168.111.157/32),(DOMAIN-SUFFIX,gstatic.com)),PHONE-FAST
+  - AND,((SRC-IP-CIDR,192.168.111.157/32),(DOMAIN-SUFFIX,googleusercontent.com)),PHONE-FAST
+  - AND,((SRC-IP-CIDR,192.168.111.157/32),(DOMAIN-SUFFIX,gvt1.com)),PHONE-FAST
+  - AND,((SRC-IP-CIDR,192.168.111.157/32),(DOMAIN-SUFFIX,youtube.com)),PHONE-FAST
+  - AND,((SRC-IP-CIDR,192.168.111.157/32),(DOMAIN-SUFFIX,googlevideo.com)),PHONE-FAST
+  - AND,((SRC-IP-CIDR,192.168.111.157/32),(DOMAIN-SUFFIX,ytimg.com)),PHONE-FAST
+  - AND,((SRC-IP-CIDR,192.168.111.157/32),(DOMAIN-SUFFIX,ggpht.com)),PHONE-FAST
+  - AND,((SRC-IP-CIDR,192.168.111.157/32),(DOMAIN-SUFFIX,gnews.com)),PHONE-FAST
+  - AND,((SRC-IP-CIDR,192.168.111.157/32),(DOMAIN-SUFFIX,whatsapp.com)),PHONE-FAST
+  - AND,((SRC-IP-CIDR,192.168.111.157/32),(DOMAIN-SUFFIX,whatsapp.net)),PHONE-FAST
+  - AND,((SRC-IP-CIDR,192.168.111.157/32),(DOMAIN-SUFFIX,linkedin.com)),PHONE-FAST
+  - AND,((SRC-IP-CIDR,192.168.111.157/32),(DOMAIN-SUFFIX,licdn.com)),PHONE-FAST
+  - AND,((SRC-IP-CIDR,192.168.111.157/32),(DOMAIN-SUFFIX,linkedinusercontent.com)),PHONE-FAST
+  # === PHASE 7H-B3: Phone CN-direct via GEOSITE/GEOIP (all 4 phones) ===
+  - AND,((SRC-IP-CIDR,192.168.111.194/32),(GEOSITE,geolocation-cn)),DIRECT  # S22 Ultra
+  - AND,((SRC-IP-CIDR,192.168.111.194/32),(GEOIP,CN)),DIRECT  # S22 Ultra
+  - AND,((SRC-IP-CIDR,192.168.111.156/32),(GEOSITE,geolocation-cn)),DIRECT  # S8
+  - AND,((SRC-IP-CIDR,192.168.111.156/32),(GEOIP,CN)),DIRECT  # S8
+  - AND,((SRC-IP-CIDR,192.168.111.155/32),(GEOSITE,geolocation-cn)),DIRECT  # S8+
+  - AND,((SRC-IP-CIDR,192.168.111.155/32),(GEOIP,CN)),DIRECT  # S8+
+  - AND,((SRC-IP-CIDR,192.168.111.157/32),(GEOSITE,geolocation-cn)),DIRECT  # iPhone
+  - AND,((SRC-IP-CIDR,192.168.111.157/32),(GEOIP,CN)),DIRECT  # iPhone
+  # === PHASE 7H-B3b: Phone LAN-direct hardening (all 4 phones) ===
+  - AND,((SRC-IP-CIDR,192.168.111.194/32),(GEOIP,LAN)),DIRECT  # S22 Ultra
+  - AND,((SRC-IP-CIDR,192.168.111.194/32),(IP-CIDR,192.168.0.0/16)),DIRECT  # S22 Ultra
+  - AND,((SRC-IP-CIDR,192.168.111.194/32),(IP-CIDR,10.0.0.0/8)),DIRECT  # S22 Ultra
+  - AND,((SRC-IP-CIDR,192.168.111.194/32),(IP-CIDR,172.16.0.0/12)),DIRECT  # S22 Ultra
+  - AND,((SRC-IP-CIDR,192.168.111.156/32),(GEOIP,LAN)),DIRECT  # S8
+  - AND,((SRC-IP-CIDR,192.168.111.156/32),(IP-CIDR,192.168.0.0/16)),DIRECT  # S8
+  - AND,((SRC-IP-CIDR,192.168.111.156/32),(IP-CIDR,10.0.0.0/8)),DIRECT  # S8
+  - AND,((SRC-IP-CIDR,192.168.111.156/32),(IP-CIDR,172.16.0.0/12)),DIRECT  # S8
+  - AND,((SRC-IP-CIDR,192.168.111.155/32),(GEOIP,LAN)),DIRECT  # S8+
+  - AND,((SRC-IP-CIDR,192.168.111.155/32),(IP-CIDR,192.168.0.0/16)),DIRECT  # S8+
+  - AND,((SRC-IP-CIDR,192.168.111.155/32),(IP-CIDR,10.0.0.0/8)),DIRECT  # S8+
+  - AND,((SRC-IP-CIDR,192.168.111.155/32),(IP-CIDR,172.16.0.0/12)),DIRECT  # S8+
+  - AND,((SRC-IP-CIDR,192.168.111.157/32),(GEOIP,LAN)),DIRECT  # iPhone
+  - AND,((SRC-IP-CIDR,192.168.111.157/32),(IP-CIDR,192.168.0.0/16)),DIRECT  # iPhone
+  - AND,((SRC-IP-CIDR,192.168.111.157/32),(IP-CIDR,10.0.0.0/8)),DIRECT  # iPhone
+  - AND,((SRC-IP-CIDR,192.168.111.157/32),(IP-CIDR,172.16.0.0/12)),DIRECT  # iPhone
+  # === PHASE 7H-B4: Phone final fallback -> PHONE-FAST (all 4 phones) ===
+  - SRC-IP-CIDR,192.168.111.194/32,PHONE-FAST  # S22 Ultra
+  - SRC-IP-CIDR,192.168.111.156/32,PHONE-FAST  # S8
+  - SRC-IP-CIDR,192.168.111.155/32,PHONE-FAST  # S8+
+  - SRC-IP-CIDR,192.168.111.157/32,PHONE-FAST  # iPhone
+  - DOMAIN,connectivitycheck.gstatic.com,AUTO-FAST  # Phase6AA android-validate
+  # === PHASE 6Z: Samsung captive portal → PROXY (phone-only in practice) ===
+  - DOMAIN,captive.samsungconnectivity.com,PROXY
+  # === CODEX Phase6Z2: YouTube/Google login endpoints via LOGIN_STABLE ===
+  - DOMAIN,youtubei.googleapis.com,LOGIN_STABLE
+  - DOMAIN,accounts.google.com,LOGIN_STABLE
+  - DOMAIN,android.clients.google.com,LOGIN_STABLE
+  - DOMAIN,oauth2.googleapis.com,LOGIN_STABLE
+  - DOMAIN,securetoken.googleapis.com,LOGIN_STABLE
+  - DOMAIN,myaccount.google.com,LOGIN_STABLE
+  - DOMAIN,clients3.google.com,LOGIN_STABLE
+  - DOMAIN,clients4.google.com,LOGIN_STABLE
+
+  # === PHASE 4D: mini4k.com CN-DIRECT ===
+  - DOMAIN-SUFFIX,mini4k.com,DIRECT
+  # === kimi.com CN-DIRECT ===
+  - DOMAIN-SUFFIX,kimi.com,DIRECT
+  # === z.ai CN-DIRECT ===
+  - DOMAIN-SUFFIX,z.ai,DIRECT
+  # === PHASE 4E-A: AI + GOOGLE CORE (NO YouTube) ===
+  # Additional AI domains
+  - DOMAIN-SUFFIX,oaistatic.com,JP_PIN_STABLE
+  - DOMAIN-SUFFIX,oaiusercontent.com,JP_PIN_STABLE
+  - DOMAIN-SUFFIX,qwenlm.ai,JP_PIN_STABLE
+  # Google core + Gmail (NOT YouTube)
+  - DOMAIN-SUFFIX,gmail.com,JP_PIN_STABLE
+  - DOMAIN,mail.google.com,JP_PIN_STABLE
+  - DOMAIN-SUFFIX,googleapis.com,JP_PIN_STABLE
+  - DOMAIN-SUFFIX,gstatic.com,JP_PIN_STABLE
+  - DOMAIN-SUFFIX,googleusercontent.com,JP_PIN_STABLE
+  # === END PHASE 4E-A RULES ===
+  # === PHASE 3: META SERVICES (14 EXPLICIT DOMAINS) ===
+  # Facebook Core (5 domains) → JP tunnel via META-PINNED
+  - DOMAIN,facebook.com,META-PINNED
+  - DOMAIN,www.facebook.com,META-PINNED
+  - DOMAIN,m.facebook.com,META-PINNED
+  - DOMAIN,graph.facebook.com,META-PINNED
+  - DOMAIN,api.facebook.com,META-PINNED
+  # Facebook CDN (4 domains) → DIRECT for locality
+  - DOMAIN,fbcdn.net,DIRECT
+  - DOMAIN,static.xx.fbcdn.net,DIRECT
+  - DOMAIN,scontent.xx.fbcdn.net,DIRECT
+  - DOMAIN,video.xx.fbcdn.net,DIRECT
+  # Instagram Core (3 domains) → JP tunnel via META-PINNED
+  - DOMAIN,instagram.com,META-PINNED
+  - DOMAIN,www.instagram.com,META-PINNED
+  - DOMAIN,i.instagram.com,META-PINNED
+  # Instagram CDN (2 domains) → DIRECT for locality
+  - DOMAIN,cdninstagram.com,DIRECT
+  - DOMAIN,scontent.cdninstagram.com,DIRECT
+  # === END PHASE 3 RULES (14 total) ===
+
+  # === PHASE 2: AI SERVICES PINNED TO JP1-Reality ===
+  # OpenAI / ChatGPT
+  - DOMAIN-SUFFIX,openai.com,AI-PINNED
+  - DOMAIN-SUFFIX,chat.openai.com,AI-PINNED
+  - DOMAIN-SUFFIX,api.openai.com,AI-PINNED
+  # Gemini / Bard
+  - DOMAIN-SUFFIX,gemini.google.com,AI-PINNED
+  - DOMAIN-SUFFIX,generativelanguage.googleapis.com,AI-PINNED
+  - DOMAIN-SUFFIX,bard.google.com,AI-PINNED
+  # Perplexity
+  - DOMAIN-SUFFIX,perplexity.ai,AI-PINNED
+  - DOMAIN-SUFFIX,api.perplexity.ai,AI-PINNED
+  # DeepSeek
+  - DOMAIN-SUFFIX,deepseek.com,AI-PINNED
+  - DOMAIN-SUFFIX,chat.deepseek.com,AI-PINNED
+  - DOMAIN-SUFFIX,api.deepseek.com,AI-PINNED
+  # Qwen / Tongyi
+  - DOMAIN-SUFFIX,qwen.ai,AI-PINNED
+  - DOMAIN-SUFFIX,tongyi.aliyun.com,AI-PINNED
+  - DOMAIN-SUFFIX,dashscope.aliyuncs.com,AI-PINNED
+  # WhatsApp
+  - DOMAIN-SUFFIX,whatsapp.com,AI-PINNED
+  - DOMAIN-SUFFIX,whatsapp.net,AI-PINNED
+  - DOMAIN-SUFFIX,web.whatsapp.com,AI-PINNED
+  # Google Translate
+  - DOMAIN-SUFFIX,translate.google.com,AI-PINNED
+  - DOMAIN-SUFFIX,translate.googleapis.com,AI-PINNED
+  # === END PHASE 2 RULES ===
+
+
+  # === CN CORE APPS / CDNs (EXPLICIT DIRECT — PHASE 6C) ===
+  - DOMAIN-SUFFIX,alicdn.com,DIRECT
+  - DOMAIN-SUFFIX,taobao.com,DIRECT
+  - DOMAIN-SUFFIX,tmall.com,DIRECT
+  - DOMAIN-SUFFIX,alibaba.com,DIRECT
+  - DOMAIN-SUFFIX,alipay.com,DIRECT
+  - DOMAIN-SUFFIX,alipayobjects.com,DIRECT
+  - DOMAIN-SUFFIX,jd.com,DIRECT
+  - DOMAIN-SUFFIX,jdcdn.com,DIRECT
+  - DOMAIN-SUFFIX,360buyimg.com,DIRECT
+  - DOMAIN-SUFFIX,xianyu.com,DIRECT
+  - DOMAIN-SUFFIX,meituan.com,DIRECT
+  - DOMAIN-SUFFIX,dpfile.com,DIRECT
+  - DOMAIN-SUFFIX,dianping.com,DIRECT
+  - DOMAIN-SUFFIX,ele.me,DIRECT
+  - DOMAIN-SUFFIX,elemecdn.com,DIRECT
+  - DOMAIN-SUFFIX,hema.com,DIRECT
+  - DOMAIN-SUFFIX,wechat.com,DIRECT
+  - DOMAIN-SUFFIX,weixin.qq.com,DIRECT
+  - DOMAIN-SUFFIX,qpic.cn,DIRECT
+  - DOMAIN-SUFFIX,gtimg.com,DIRECT
+  - DOMAIN-SUFFIX,tencent-cloud.net,DIRECT
+  - DOMAIN-SUFFIX,umeng.com,DIRECT
+  - DOMAIN-SUFFIX,jpush.io,DIRECT
+  - DOMAIN-SUFFIX,duxiaoman.com,DIRECT
+  - DOMAIN-SUFFIX,dxmpay.com,DIRECT
+  - DOMAIN-SUFFIX,ninebot.com,DIRECT
+  - DOMAIN-SUFFIX,mi.com,DIRECT
+  - DOMAIN-SUFFIX,miui.com,DIRECT
+  - DOMAIN-SUFFIX,bankofchina.com,DIRECT
+  - DOMAIN-SUFFIX,boc.cn,DIRECT
+  - DOMAIN-SUFFIX,hsbc.com.cn,DIRECT
+  # === END CN CORE APPS / CDNs ===
+
+  # === APPLE SERVICES (SACRED - UNCHANGED) ===
+  - DOMAIN-SUFFIX,apple.com,DIRECT
+  - DOMAIN-SUFFIX,icloud.com,DIRECT
+  - DOMAIN-SUFFIX,apple-cloudkit.com,DIRECT
+  - DOMAIN-SUFFIX,mzstatic.com,DIRECT
+  - DOMAIN-SUFFIX,aaplimg.com,DIRECT
+  - DOMAIN-SUFFIX,cdn-apple.com,DIRECT
+  - DOMAIN-SUFFIX,apple.news,DIRECT
+  # === YOUTUBE / GOOGLE (SACRED - UNCHANGED) ===
+  - DOMAIN-SUFFIX,youtube.com,PROXY
+  - DOMAIN-SUFFIX,youtu.be,PROXY
+  - DOMAIN-SUFFIX,googlevideo.com,PROXY
+  - DOMAIN-SUFFIX,ytimg.com,PROXY
+  - DOMAIN-SUFFIX,ggpht.com,PROXY
+  - DOMAIN-SUFFIX,googleapis.com,PROXY
+  - DOMAIN-SUFFIX,googleusercontent.com,PROXY
+  - DOMAIN-SUFFIX,gstatic.com,PROXY
+  - DOMAIN-SUFFIX,google.com,PROXY
+  - DOMAIN-SUFFIX,google.com.hk,PROXY
+  - DOMAIN-SUFFIX,gmail.com,PROXY
+  - DOMAIN-SUFFIX,github.com,PROXY
+  - DOMAIN-SUFFIX,githubusercontent.com,PROXY
+  - DOMAIN-SUFFIX,twitter.com,PROXY
+  - DOMAIN-SUFFIX,x.com,PROXY
+  - DOMAIN-SUFFIX,twimg.com,PROXY
+  - DOMAIN-SUFFIX,telegram.org,PROXY
+  - DOMAIN-SUFFIX,t.me,PROXY
+  - DOMAIN-SUFFIX,anthropic.com,PROXY
+  - DOMAIN-KEYWORD,google,PROXY
+  - DOMAIN-KEYWORD,youtube,PROXY
+  # === PHASE 5L: LinkedIn Global ===
+  - DOMAIN-SUFFIX,linkedin.com,PROXY
+  - DOMAIN-SUFFIX,licdn.com,PROXY
+  - DOMAIN-SUFFIX,lnkd.in,PROXY
+  # === END PHASE 5L ===
+  # === AtlasMind (foreign AI service, must proxy) ===
+  - DOMAIN-SUFFIX,atlasmind.space,PROXY
+  # === LAN DIRECT ===
+  - GEOIP,LAN,DIRECT
+  # === CN SITES DIRECT ===
+  - GEOIP,CN,DIRECT
+  - GEOSITE,CN,DIRECT
+  # === PHASE 9: Additional GFW-blocked domains for laptop (before DIRECT catch-all) ===
+  - DOMAIN-SUFFIX,chatgpt.com,AI-PINNED
+  - DOMAIN-SUFFIX,discord.com,PROXY
+  - DOMAIN-SUFFIX,discordapp.com,PROXY
+  - DOMAIN-SUFFIX,reddit.com,PROXY
+  - DOMAIN-SUFFIX,redd.it,PROXY
+  - DOMAIN-SUFFIX,spotify.com,PROXY
+  # === PHASE 9D: Council-approved explicit AI + CDN domains ===
+  - DOMAIN-SUFFIX,claude.ai,AI-PINNED
+  - DOMAIN-SUFFIX,huggingface.co,AI-PINNED
+  - DOMAIN-SUFFIX,githubassets.com,PROXY
+  - DOMAIN-SUFFIX,discordapp.net,PROXY
+  - DOMAIN-SUFFIX,discord.gg,PROXY
+  - DOMAIN-SUFFIX,redditstatic.com,PROXY
+  - DOMAIN-SUFFIX,redditmedia.com,PROXY
+  # === PHASE 9D: Systemic GFW bypass — covers ~5000 GFW-blocked domains ===
+  # Council unanimous: GEOSITE,GFW,PROXY after CN rules, before laptop DIRECT.
+  # Explicit rules above take priority (AI-PINNED for AI services).
+  - GEOSITE,GFW,PROXY
+  # === PHASE 8C: Laptop unknown traffic DIRECT (torrent peers, unlisted foreign IPs) ===
+  # All proxy-needed services (Google, YouTube, OpenAI, Twitter, Telegram, Meta, etc.)
+  # are caught by explicit rules above. What reaches here from the laptop is safely DIRECT.
+  - SRC-IP-CIDR,192.168.111.181/32,DIRECT
+  # === EVERYTHING ELSE THROUGH PROXY ===
+  - MATCH,PROXY

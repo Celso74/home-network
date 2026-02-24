@@ -1,0 +1,5 @@
+# Never commit live config with real credentials
+config.yaml
+*.key
+*.pem
+*.secret
