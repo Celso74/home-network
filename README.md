@@ -430,12 +430,13 @@ curl -s 'http://127.0.0.1:9090/proxies/JP1-Reality' \
 | Priority | Improvement | Why |
 |----------|------------|-----|
 | High | Add second JP proxy node | JP VPS is single point of failure — if it goes down, no GFW bypass |
-| Medium | Disable/remove MikroTik Netwatch DNS restore | Netwatch has historically re-added 223.5.5.5 as backup DNS causing leaks |
 | Medium | VLAN for CIOT devices | Xiaomi IoT devices should be fully isolated at L3, not just a separate SSID |
 | Medium | UPS for N100 + MikroTik | Shanghai power fluctuations risk NVMe corruption during writes |
-| Medium | GeoSite.dat auto-update cron | Currently manual — was 3.5 years stale (Sep 2022 → Feb 2026) |
 | Low | MikroTik 4G/5G failover WAN | CT fiber outages; USB dongle on spare ether port for backup WAN |
-| Low | Move Plex to N100 NVMe | N100 has 476 GB NVMe, always on — laptop shouldn't need to stay awake for Plex |
+
+**Already implemented:**
+- Netwatch DNS leak fixed — DOWN script no longer falls back to 223.5.5.5; DNS stays locked to N100, only fake-IP route is toggled
+- GeoSite.dat auto-update — cron runs 1st of every month at 3am on N100 (`/usr/bin/update-geosite.sh`)
 
 ---
 
