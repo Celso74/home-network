@@ -110,7 +110,7 @@ Without this, GFW bypass is broken for all routed clients.
 | Model | Ruijie ES205GC (5-port Gigabit) |
 | Role | Pure L2 distribution — no routing, no DHCP, no DNS |
 | Management IP | 192.168.13.1 (factory default: 10.44.77.254) |
-| Management | Local web UI at http://192.168.13.1 or Ruijie Cloud app (锐捷睿易) |
+| Management | Local web UI at http://192.168.13.1, Ruijie Cloud app (锐捷睿易), or https://noc.ruijie.com.cn/ |
 
 **Factory reset:** Hold reset 10 seconds → IP returns to 10.44.77.254. Connect laptop at 10.44.77.10/24 to recover.
 
@@ -167,7 +167,7 @@ Without this, GFW bypass is broken for all routed clients.
 |-------|-------|
 | Model | Ruijie ES209GC-P (9-port Gigabit PoE) |
 | Role | PoE power + L2 distribution for all APs |
-| Management | Ruijie Cloud app (锐捷睿易) |
+| Management | Ruijie Cloud app (锐捷睿易) or https://noc.ruijie.com.cn/ |
 | Connected to | ES205GC P3 |
 
 ---
@@ -183,7 +183,7 @@ Ceiling-mounted, PoE-powered, mesh mode. Pure L2 bridge — no routing, no DHCP,
 | Master Bedroom | Master bedroom |
 | HB | HB's room |
 
-**All AP config is managed in the Ruijie Cloud app (锐捷睿易 / Ruijie Easy).** Do not use local web management — use the app for SSID, password, channels, power, mesh settings.
+**All AP config is managed in the Ruijie Cloud app (锐捷睿易 / Ruijie Easy) or web portal at https://noc.ruijie.com.cn/ (login with phone number).** Do not use local web management — use the app or portal for SSID, password, channels, power, and mesh settings.
 
 **Re-adding an AP after factory reset:**
 1. Unplug PoE → replug
