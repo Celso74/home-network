@@ -28,7 +28,8 @@ This guide covers everything needed to rebuild this network from zero. Follow th
 **Full disk image backup** (faster than reinstalling):
 - File: `BASELINE-01-BRIDGE-STABLE.img.gz`
 - SHA256: `15d44acca59936032c213b095f53670d12fd580a969fabe320596a145602a4f0`
-- Location: Google Drive `LD:N100 Super Device - Saves and Images/`
+- Location: Google Drive `G:\My Drive\N100 Super Device - Saves and Images\`
+- VPS copy: `~/n100_backups/` on core-vps-1
 - Restore: `gunzip -c BASELINE-01-BRIDGE-STABLE.img.gz | dd of=/dev/nvme0n1 bs=4M status=progress`
 
 ---
