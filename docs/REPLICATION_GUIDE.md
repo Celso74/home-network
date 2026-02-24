@@ -8,8 +8,8 @@ This guide covers everything needed to rebuild this network from zero. Follow th
 
 - Intel N100 Mini PC with 4× GbE ports and NVMe SSD
 - MikroTik RB750Gr3 (hEX)
-- Ruijie RG-ES25GC 25-port switch
-- Ruijie EG110G-P AP controller / PoE switch
+- Ruijie ES205GC 5-port switch
+- Ruijie ES209GC-P AP controller / PoE switch
 - 4× Ruijie EAP102E ceiling-mount APs
 - Hetzner VPS (or any Linux VPS with public IP)
 - Windows laptop for management
@@ -86,12 +86,12 @@ brctl show br-wan      # Must list eth0 and eth1 as members
 ```
 CT Modem ──────► N100 eth0     (WAN IN)
                  N100 eth1 ──► MikroTik ether1   (WAN OUT)
-                 N100 eth2 ──► Ruijie RG-ES25GC  (management internet)
+                 N100 eth2 ──► Ruijie ES205GC  (management internet)
                  N100 eth3 ──► Laptop             (rescue/management — dedicated cable)
 
-MikroTik ether2 ──► Ruijie RG-ES25GC port P1
-Ruijie RG-ES25GC port P3 ──► Ruijie EG110G-P
-Ruijie EG110G-P ──► 4× EAP102E APs (PoE)
+MikroTik ether2 ──► Ruijie ES205GC port P1
+Ruijie ES205GC port P3 ──► Ruijie ES209GC-P
+Ruijie ES209GC-P ──► 4× EAP102E APs (PoE)
 ```
 
 Power-on order: CT Modem → N100 → MikroTik → switches → APs
@@ -162,7 +162,7 @@ ssh-copy-id -i ~/.ssh/id_rsa_mikrotik admin@192.168.111.1
 
 ---
 
-## Step 5: Configure Ruijie RG-ES25GC Switch
+## Step 5: Configure Ruijie ES205GC Switch
 
 Factory default IP: `10.44.77.254`
 
@@ -176,17 +176,17 @@ Factory default IP: `10.44.77.254`
 
 ---
 
-## Step 6: Configure Ruijie EG110G-P and APs
+## Step 6: Configure Ruijie ES209GC-P and APs
 
-The EG110G-P and EAP102E APs are managed via the Ruijie Cloud app (Chinese app: "锐捷睿易").
+The ES209GC-P and EAP102E APs are managed via the Ruijie Cloud app (Chinese app: "锐捷睿易").
 
-**EG110G-P settings:**
+**ES209GC-P settings:**
 - IP: 192.168.110.1/24
 - DHCP range: 192.168.110.2–254
 - DHCP DNS: 223.5.5.5 (N100 will intercept this transparently)
 
 **AP setup (EAP102E × 4):**
-1. Connect each AP to EG110G-P PoE port
+1. Connect each AP to ES209GC-P PoE port
 2. APs auto-discover and register with Ruijie Cloud
 3. Configure in Ruijie Cloud app:
    - SSID: set desired network name(s)
