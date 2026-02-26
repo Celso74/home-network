@@ -51,6 +51,7 @@ dns:
     - "+.tiktok.com"
     - "+.alipay.com"
     - "+.csdn.net"
+    - "+.rj.link"
   default-nameserver:
     - 223.5.5.5
     - 119.29.29.29
@@ -67,78 +68,78 @@ dns:
     "+.z.ai": 223.5.5.5
     # === PHASE 4F: Scoped DoH (OpenAI, OpenRouter, NotebookLM, AtlasMind ONLY) ===
     # OpenAI
-    "openai.com": "https://1.1.1.1/dns-query#JP-TUIC"
-    "+.openai.com": "https://1.1.1.1/dns-query#JP-TUIC"
-    "oaistatic.com": "https://1.1.1.1/dns-query#JP-TUIC"
-    "+.oaistatic.com": "https://1.1.1.1/dns-query#JP-TUIC"
-    "oaiusercontent.com": "https://1.1.1.1/dns-query#JP-TUIC"
-    "+.oaiusercontent.com": "https://1.1.1.1/dns-query#JP-TUIC"
+    "openai.com": "https://1.1.1.1/dns-query#JP1-Reality"
+    "+.openai.com": "https://1.1.1.1/dns-query#JP1-Reality"
+    "oaistatic.com": "https://1.1.1.1/dns-query#JP1-Reality"
+    "+.oaistatic.com": "https://1.1.1.1/dns-query#JP1-Reality"
+    "oaiusercontent.com": "https://1.1.1.1/dns-query#JP1-Reality"
+    "+.oaiusercontent.com": "https://1.1.1.1/dns-query#JP1-Reality"
     # OpenRouter
-    "openrouter.ai": "https://1.1.1.1/dns-query#JP-TUIC"
-    "+.openrouter.ai": "https://1.1.1.1/dns-query#JP-TUIC"
+    "openrouter.ai": "https://1.1.1.1/dns-query#JP1-Reality"
+    "+.openrouter.ai": "https://1.1.1.1/dns-query#JP1-Reality"
     # NotebookLM
-    "notebooklm.google.com": "https://1.1.1.1/dns-query#JP-TUIC"
+    "notebooklm.google.com": "https://1.1.1.1/dns-query#JP1-Reality"
     # AtlasMind
-    "atlasmind.space": "https://1.1.1.1/dns-query#JP-TUIC"
-    "+.atlasmind.space": "https://1.1.1.1/dns-query#JP-TUIC"
+    "atlasmind.space": "https://1.1.1.1/dns-query#JP1-Reality"
+    "+.atlasmind.space": "https://1.1.1.1/dns-query#JP1-Reality"
     # === PHASE 5G: Google DoH via JP ===
-    "+.google.com": "https://1.1.1.1/dns-query#JP-TUIC"
-    "+.gmail.com": "https://1.1.1.1/dns-query#JP-TUIC"
-    "+.googleapis.com": "https://1.1.1.1/dns-query#JP-TUIC"
-    "+.gstatic.com": "https://1.1.1.1/dns-query#JP-TUIC"
-    "+.googleusercontent.com": "https://1.1.1.1/dns-query#JP-TUIC"
-    "+.googlevideo.com": "https://1.1.1.1/dns-query#JP-TUIC"
-    "+.ytimg.com": "https://1.1.1.1/dns-query#JP-TUIC"
+    "+.google.com": "https://1.1.1.1/dns-query#JP1-Reality"
+    "+.gmail.com": "https://1.1.1.1/dns-query#JP1-Reality"
+    "+.googleapis.com": "https://1.1.1.1/dns-query#JP1-Reality"
+    "+.gstatic.com": "https://1.1.1.1/dns-query#JP1-Reality"
+    "+.googleusercontent.com": "https://1.1.1.1/dns-query#JP1-Reality"
+    "+.googlevideo.com": "https://1.1.1.1/dns-query#JP1-Reality"
+    "+.ytimg.com": "https://1.1.1.1/dns-query#JP1-Reality"
     # === PHASE 6W2: YouTube + Google CDN gaps ===
-    "+.youtube.com": "https://1.1.1.1/dns-query#JP-TUIC"
-    "+.youtubei.googleapis.com": "https://1.1.1.1/dns-query#JP-TUIC"
-    "+.gvt1.com": "https://1.1.1.1/dns-query#JP-TUIC"
-    "+.ggpht.com": "https://1.1.1.1/dns-query#JP-TUIC"
+    "+.youtube.com": "https://1.1.1.1/dns-query#JP1-Reality"
+    "+.youtubei.googleapis.com": "https://1.1.1.1/dns-query#JP1-Reality"
+    "+.gvt1.com": "https://1.1.1.1/dns-query#JP1-Reality"
+    "+.ggpht.com": "https://1.1.1.1/dns-query#JP1-Reality"
     # === PHASE 5L: LinkedIn Global ===
-    "linkedin.com": "https://1.1.1.1/dns-query#JP-TUIC"
-    "+.linkedin.com": "https://1.1.1.1/dns-query#JP-TUIC"
-    "licdn.com": "https://1.1.1.1/dns-query#JP-TUIC"
-    "+.licdn.com": "https://1.1.1.1/dns-query#JP-TUIC"
+    "linkedin.com": "https://1.1.1.1/dns-query#JP1-Reality"
+    "+.linkedin.com": "https://1.1.1.1/dns-query#JP1-Reality"
+    "licdn.com": "https://1.1.1.1/dns-query#JP1-Reality"
+    "+.licdn.com": "https://1.1.1.1/dns-query#JP1-Reality"
     # === PHASE 9: Additional GFW-sensitive domains — prevent DNS poisoning ===
-    "github.com": "https://1.1.1.1/dns-query#JP-TUIC"
-    "+.github.com": "https://1.1.1.1/dns-query#JP-TUIC"
-    "githubusercontent.com": "https://1.1.1.1/dns-query#JP-TUIC"
-    "+.githubusercontent.com": "https://1.1.1.1/dns-query#JP-TUIC"
-    "twitter.com": "https://1.1.1.1/dns-query#JP-TUIC"
-    "+.twitter.com": "https://1.1.1.1/dns-query#JP-TUIC"
-    "x.com": "https://1.1.1.1/dns-query#JP-TUIC"
-    "+.x.com": "https://1.1.1.1/dns-query#JP-TUIC"
-    "twimg.com": "https://1.1.1.1/dns-query#JP-TUIC"
-    "+.twimg.com": "https://1.1.1.1/dns-query#JP-TUIC"
-    "telegram.org": "https://1.1.1.1/dns-query#JP-TUIC"
-    "+.telegram.org": "https://1.1.1.1/dns-query#JP-TUIC"
-    "t.me": "https://1.1.1.1/dns-query#JP-TUIC"
-    "discord.com": "https://1.1.1.1/dns-query#JP-TUIC"
-    "+.discord.com": "https://1.1.1.1/dns-query#JP-TUIC"
-    "discordapp.com": "https://1.1.1.1/dns-query#JP-TUIC"
-    "+.discordapp.com": "https://1.1.1.1/dns-query#JP-TUIC"
-    "reddit.com": "https://1.1.1.1/dns-query#JP-TUIC"
-    "+.reddit.com": "https://1.1.1.1/dns-query#JP-TUIC"
-    "redd.it": "https://1.1.1.1/dns-query#JP-TUIC"
-    "anthropic.com": "https://1.1.1.1/dns-query#JP-TUIC"
-    "+.anthropic.com": "https://1.1.1.1/dns-query#JP-TUIC"
-    "claude.ai": "https://1.1.1.1/dns-query#JP-TUIC"
-    "+.claude.ai": "https://1.1.1.1/dns-query#JP-TUIC"
-    "chatgpt.com": "https://1.1.1.1/dns-query#JP-TUIC"
-    "+.chatgpt.com": "https://1.1.1.1/dns-query#JP-TUIC"
+    "github.com": "https://1.1.1.1/dns-query#JP1-Reality"
+    "+.github.com": "https://1.1.1.1/dns-query#JP1-Reality"
+    "githubusercontent.com": "https://1.1.1.1/dns-query#JP1-Reality"
+    "+.githubusercontent.com": "https://1.1.1.1/dns-query#JP1-Reality"
+    "twitter.com": "https://1.1.1.1/dns-query#JP1-Reality"
+    "+.twitter.com": "https://1.1.1.1/dns-query#JP1-Reality"
+    "x.com": "https://1.1.1.1/dns-query#JP1-Reality"
+    "+.x.com": "https://1.1.1.1/dns-query#JP1-Reality"
+    "twimg.com": "https://1.1.1.1/dns-query#JP1-Reality"
+    "+.twimg.com": "https://1.1.1.1/dns-query#JP1-Reality"
+    "telegram.org": "https://1.1.1.1/dns-query#JP1-Reality"
+    "+.telegram.org": "https://1.1.1.1/dns-query#JP1-Reality"
+    "t.me": "https://1.1.1.1/dns-query#JP1-Reality"
+    "discord.com": "https://1.1.1.1/dns-query#JP1-Reality"
+    "+.discord.com": "https://1.1.1.1/dns-query#JP1-Reality"
+    "discordapp.com": "https://1.1.1.1/dns-query#JP1-Reality"
+    "+.discordapp.com": "https://1.1.1.1/dns-query#JP1-Reality"
+    "reddit.com": "https://1.1.1.1/dns-query#JP1-Reality"
+    "+.reddit.com": "https://1.1.1.1/dns-query#JP1-Reality"
+    "redd.it": "https://1.1.1.1/dns-query#JP1-Reality"
+    "anthropic.com": "https://1.1.1.1/dns-query#JP1-Reality"
+    "+.anthropic.com": "https://1.1.1.1/dns-query#JP1-Reality"
+    "claude.ai": "https://1.1.1.1/dns-query#JP1-Reality"
+    "+.claude.ai": "https://1.1.1.1/dns-query#JP1-Reality"
+    "chatgpt.com": "https://1.1.1.1/dns-query#JP1-Reality"
+    "+.chatgpt.com": "https://1.1.1.1/dns-query#JP1-Reality"
     # === PHASE 9D: Additional AI services DoH ===
-    "huggingface.co": "https://1.1.1.1/dns-query#JP-TUIC"
-    "+.huggingface.co": "https://1.1.1.1/dns-query#JP-TUIC"
+    "huggingface.co": "https://1.1.1.1/dns-query#JP1-Reality"
+    "+.huggingface.co": "https://1.1.1.1/dns-query#JP1-Reality"
     # === END PHASE 4F ===
 
 proxies:
   # === HYSTERIA2 (UDP-based, fastest for streaming) ===
   - name: "JP-Hysteria2"
     type: hysteria2
-    server: jp.jakeinitiativexx.free.hr
+    server: your-server.example.com
     port: 27635
-    password: REDACTED
-    sni: jp.jakeinitiativexx.free.hr
+    password: YOUR-UUID-HERE
+    sni: your-server.example.com
     skip-cert-verify: true
     alpn:
       - h3
@@ -146,11 +147,11 @@ proxies:
   # === TUIC (UDP-based with BBR) ===
   - name: "JP-TUIC"
     type: tuic
-    server: jp.jakeinitiativexx.free.hr
+    server: your-server.example.com
     port: 43042
-    uuid: REDACTED
-    password: REDACTED
-    sni: jp.jakeinitiativexx.free.hr
+    uuid: YOUR-UUID-HERE
+    password: YOUR-UUID-HERE
+    sni: your-server.example.com
     skip-cert-verify: true
     alpn:
       - h3
@@ -160,9 +161,9 @@ proxies:
   # === REALITY NODES (TCP-based) ===
   - name: "JP1-Reality"
     type: vless
-    server: REDACTED_IP
+    server: YOUR-VPS-IP
     port: 30187
-    uuid: REDACTED
+    uuid: YOUR-UUID-HERE
     tls: true
     flow: xtls-rprx-vision
     skip-cert-verify: true
@@ -171,8 +172,8 @@ proxies:
     network: tcp
     udp: true
     reality-opts:
-      public-key: REDACTED
-      short-id: "REDACTED"
+      public-key: YOUR-REALITY-PUBLIC-KEY
+      short-id: "YOUR-SHORT-ID"
 
 proxy-groups:
   # Auto-select fastest node
@@ -191,8 +192,8 @@ proxy-groups:
   - name: "PROXY"
     type: select
     proxies:
-      - "AUTO-FAST"
       - "JP1-Reality"
+      - "AUTO-FAST"
       - "JP-Hysteria2"
       - "JP-TUIC"
       - "DIRECT"
@@ -241,6 +242,22 @@ proxy-groups:
       - "JP1-Reality"
 
 rules:
+  # === CRL/OCSP REVOCATION FIX (Council-approved: route via PROXY to bypass GFW DNS poisoning) ===
+  - DOMAIN-SUFFIX,pki.goog,PROXY
+  - DOMAIN-SUFFIX,digicert.com,PROXY
+  - DOMAIN-SUFFIX,lencr.org,PROXY
+  - DOMAIN-SUFFIX,identrust.com,PROXY
+  - DOMAIN-SUFFIX,amazontrust.com,PROXY
+  - DOMAIN-SUFFIX,comodoca.com,PROXY
+  - DOMAIN-SUFFIX,globalsign.com,PROXY
+  - DOMAIN-SUFFIX,entrust.net,PROXY
+  - DOMAIN-SUFFIX,verisign.com,PROXY
+  - DOMAIN-SUFFIX,thawte.com,PROXY
+  - DOMAIN-SUFFIX,symcb.com,PROXY
+  - DOMAIN-SUFFIX,usertrust.com,PROXY
+  - DOMAIN-KEYWORD,ocsp,PROXY
+  - DOMAIN-KEYWORD,crl,PROXY
+  # === END CRL/OCSP FIX ===
   # === PHASE 7J: Shield pinned — HOLY — DO NOT MOVE OR REMOVE ===
   - SRC-IP-CIDR,192.168.111.183/32,SHIELD-STABLE
   # === PHASE 7H-B1: iPhone Apple services via PHONE-FAST (proxy in CN) ===
@@ -500,6 +517,8 @@ rules:
   # === END PHASE 5L ===
   # === AtlasMind (foreign AI service, must proxy) ===
   - DOMAIN-SUFFIX,atlasmind.space,PROXY
+  # === Ruijie AP cloud log noise reduction ===
+  - DOMAIN-SUFFIX,rj.link,DIRECT
   # === LAN DIRECT ===
   - GEOIP,LAN,DIRECT
   # === CN SITES DIRECT ===

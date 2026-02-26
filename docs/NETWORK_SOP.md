@@ -104,7 +104,8 @@ When a site is blocked by GFW and needs routing through proxy:
 
 **Rule placement guide (config.yaml rules section, top to bottom):**
 ```
-SHIELD-STABLE per-device rule     ← first, never move
+CRL/OCSP revocation rules         ← HIGHEST priority, route via PROXY
+SHIELD-STABLE per-device rule     ← never move
 Per-device rules (phones etc)
 AI services (claude.ai, chatgpt.com → AI-PINNED)
 CDN domains (githubassets, discordapp.net, etc → PROXY)
@@ -113,6 +114,12 @@ GEOSITE,GFW,PROXY                 ← GFW catch-all (~5000 domains)
 Laptop DIRECT catch-all           ← torrent bandwidth saver
 MATCH,PROXY                       ← everything else
 ```
+
+> **Why CRL/OCSP rules must be at the top:** Without explicit domain rules, CRL/OCSP
+> domains fall through to GeoIP matching. The GFW poisons DNS for foreign PKI domains
+> (e.g., `c.pki.goog` resolves to a Chinese IP), causing them to match `GeoIP(CN)` and
+> go DIRECT — which the GFW blocks. This breaks Windows TLS certificate revocation
+> checking. See `docs/TROUBLESHOOTING_2026-02-26.md` for the full investigation.
 
 ---
 
@@ -201,6 +208,41 @@ If switch management (192.168.13.1) is not reachable:
 
 ---
 
+## Laptop Proxy Troubleshooting
+
+If browsers show `ERR_PROXY_CONNECTION_FAILED` but `curl.exe` works:
+
+```bash
+# Check Windows system proxy (from VPS via tunnel)
+ssh -p 2228 celso@127.0.0.1 'reg query "HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings" /v ProxyEnable'
+```
+
+If `ProxyEnable` is `1`, a proxy client (Hiddify, Clash for Windows, v2rayN, etc.) left an orphaned proxy setting. The transparent proxy architecture does NOT need a local proxy client.
+
+**Fix:**
+```cmd
+reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings" /v ProxyEnable /t REG_DWORD /d 0 /f
+reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings" /v ProxyServer /t REG_SZ /d "" /f
+```
+
+> **Note:** Windows `curl.exe` does NOT use the system proxy. It connects directly.
+> So curl tests can succeed while browsers fail. Always check the system proxy when
+> debugging browser-only connectivity issues.
+
+---
+
+## DoH Tag Configuration
+
+All `nameserver-policy` DoH entries must use `#JP1-Reality` (TCP-based). Do NOT change to `#JP-TUIC` (UDP/QUIC) — the GFW throttles UDP traffic patterns after ~10 days, causing DNS resolution failures across the entire network.
+
+**Verify current tags:**
+```bash
+ssh -p 2226 root@127.0.0.1 'grep "dns-query#" /etc/openclash/config/config.yaml | head -5'
+# Should show: #JP1-Reality (NOT #JP-TUIC)
+```
+
+---
+
 ## Important Rules (Never Break)
 
 1. **NEVER add IP to br-wan** — kills GFW tunnels in ~30s
@@ -211,3 +253,5 @@ If switch management (192.168.13.1) is not reachable:
 6. **Download GeoSite.dat on-router via curl, never SCP through tunnel**
 7. **N100 br-wan must always be `proto=none` with no IP**
 8. **Rescue IPs (.254/.253/.252/.251) must always exist on br-lan**
+9. **DoH tags must use `#JP1-Reality`** — NEVER switch to `#JP-TUIC` (UDP throttling)
+10. **CRL/OCSP rules must be at TOP of rules section** — prevents GFW DNS poisoning trap
