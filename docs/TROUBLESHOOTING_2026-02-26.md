@@ -177,3 +177,116 @@ ssh -p 2228 celso@127.0.0.1 'curl.exe --connect-timeout 30 --ssl-revoke-best-eff
 | JP1-Reality latency | 308ms, alive |
 
 **Remaining:** Hiddify should be fully uninstalled to prevent reoccurrence. Windows Schannel OCSP checking adds ~10s overhead to HTTPS connections via curl.exe; browsers (Chrome/Edge) use BoringSSL+CRLSets and are not affected by this.
+
+---
+
+## Session 2 — Video Streaming & Hiddify Coexistence (same day, evening)
+
+### Issue 4: VPS Routing Suboptimal
+
+**Problem:** VPS (5.75.182.153) was routing through JP proxy (China→JP→Germany, ~348ms) instead of direct (China→Germany, ~177ms).
+
+**Fix:** Added `IP-CIDR,5.75.182.153/32,DIRECT` rule before `MATCH,PROXY`. Council-approved (Round 4, unanimous).
+
+**Result:** SSH total time dropped from 0.87s to 0.37s (2x faster).
+
+---
+
+### Issue 5: Hiddify Coexistence (Away-from-Home Use)
+
+**Problem:** User needs Hiddify when traveling (coffee shops in China, GFW blocks everything), but Hiddify's `set_system_proxy: true` breaks the home transparent proxy setup.
+
+**Fix (Council Round 4, unanimous):**
+1. Switched Hiddify from `system-proxy` to `tun` mode in `shared_preferences.json`
+2. Deployed network-aware PowerShell script: `C:\ProgramData\Axiom\hiddify-network.ps1`
+3. Registered Windows Scheduled Task "Axiom-HiddifyNetwork" with 3 triggers
+
+**Script logic (3 states):**
+- **HOME** (gateway 192.168.111.1) → Kill Hiddify, disable proxy
+- **AWAY IN CHINA** (google.com:443 TCP probe times out) → Start Hiddify TUN mode
+- **AWAY OUTSIDE CHINA** (google.com reachable) → Kill Hiddify, no proxy needed
+
+**Override:** Create `C:\ProgramData\Axiom\force-hiddify.txt` to force Hiddify on regardless.
+
+**Triggers:** AtLogOn + every 5 minutes + NetworkProfile event (EventID 10000/10001/10002).
+
+---
+
+### Issue 6: Video Streaming Degraded (YouTube, Facebook, Google News)
+
+**Symptoms:** Facebook videos hang after 6s, YouTube not working on phone, Google News slow.
+
+**Root cause chain (Council Rounds 5-8):**
+
+1. **JP1-Reality latency spiking** (422ms → 1271ms → 3057ms) — ISP/path degradation
+2. **JP-Hysteria2 completely DOWN** — GFW killing bare QUIC (no Salamander obfuscation, fixed high port 27635)
+3. **Switched to JP-TUIC** (only healthy node at 220ms) but caused **QUIC-in-QUIC MTU fragmentation** — YouTube app sends QUIC, tunneled inside TUIC (also QUIC), packets exceed MTU, get silently dropped
+
+**Fixes applied (in order):**
+
+**a) PROXY → AUTO-FAST (Council Round 5)**
+Switched from degraded JP1-Reality to AUTO-FAST (url-test group picking fastest node).
+Added JP-Hysteria2 to AUTO-FAST for resilience.
+YouTube page load: 2.3s → 0.59s.
+
+**b) LAN-wide QUIC block (Council Rounds 6-7)**
+Blocked UDP 443 (QUIC) for all LAN devices to force TCP fallback:
+- nftables: `nft insert rule inet fw4 openclash_mangle ip saddr 192.168.111.0/24 udp dport 443 counter reject`
+- Mihomo config: `AND,((NETWORK,UDP),(DST-PORT,443)),REJECT` (after Shield rule)
+
+**Critical lesson:** The QUIC block must be in the `openclash_mangle` chain (before tproxy), NOT in the `forward` chain. Tproxy intercepts UDP in mangle before forward sees it.
+
+**c) PHONE-FAST → JP1-Reality first (Council Round 8)**
+The QUIC block + JP-TUIC combination still broke phone YouTube. Shield TV proved JP1-Reality delivers 1080p video fine despite misleading 3057ms latency probe.
+
+**The 3057ms latency is a measurement artifact** — the health check probe is deprioritized, but actual data throughput is healthy. Shield TV downloaded 163MB of video through JP1-Reality without issues.
+
+Switched PHONE-FAST order: JP1-Reality → JP-TUIC → JP-Hysteria2 (was JP-TUIC first).
+
+**d) PROXY → JP1-Reality (for laptop)**
+Same logic — laptop YouTube was slow through JP-TUIC. Switched back to JP1-Reality.
+
+**Result:** YouTube working on phone (1080p) and laptop.
+
+---
+
+### Issue 7: JP-Hysteria2 Dead — GFW Analysis
+
+**Status:** Completely down (alive=false). Known issue from previous audit: "33% timeout rate caused by server-side QUIC connection limit."
+
+**Research findings (Reddit, GitHub, academic papers):**
+- GFW fingerprints bare Hysteria2/QUIC within ~30 seconds on China Telecom backbone
+- Fixed high port (27635) is easily tracked by 5-tuple flow analysis
+- ISPs mark IPs with heavy UDP traffic, then drop ALL UDP to that IP
+
+**Required server-side fixes (for Henry):**
+1. Enable **Salamander obfuscation** (`obfs: type: salamander`)
+2. Move to **port 443** (blends with legitimate QUIC)
+3. Enable **port hopping** (iptables DNAT range 20000-50000) — but note: sing-box clients don't support port hopping
+
+**Note:** VLESS-Reality (JP1-Reality) works fine because it's TCP-based. The GFW focuses UDP throttling on the CN→JP backbone but leaves TCP largely alone.
+
+---
+
+## Files Changed (Session 2)
+
+### N100 (`/etc/openclash/config/config.yaml`)
+- VPS DIRECT rule: `IP-CIDR,5.75.182.153/32,DIRECT` before MATCH
+- PROXY group: reordered, JP1-Reality first (was AUTO-FAST)
+- AUTO-FAST group: added JP-Hysteria2 (3 nodes: JP-TUIC, JP1-Reality, JP-Hysteria2)
+- PHONE-FAST group: JP1-Reality first (was JP-TUIC)
+- Phase 11 QUIC block: `AND,((NETWORK,UDP),(DST-PORT,443)),REJECT` after Shield rule
+- nftables mangle chain: LAN-wide QUIC reject (immediate, survives until reboot)
+
+### Laptop (Windows 11)
+- Hiddify: `service-mode` changed from `system-proxy` to `tun`
+- New: `C:\ProgramData\Axiom\hiddify-network.ps1` (network-aware Hiddify toggle)
+- New: Scheduled Task "Axiom-HiddifyNetwork" (3 triggers)
+
+### Council Rounds This Session
+- Round 3: ERR_PROXY_CONNECTION_FAILED diagnosis → disable proxy, fix Hiddify
+- Round 4: Hiddify coexistence → network-aware script + TUN mode
+- Round 5: Video streaming → switch to AUTO-FAST
+- Round 6: YouTube broken on phone → block QUIC (phone-scoped)
+- Round 7: QUIC affects all devices → LAN-wide QUIC block
+- Round 8: Phone still broken → switch to JP1-Reality (same as Shield)

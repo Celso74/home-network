@@ -187,6 +187,7 @@ proxy-groups:
     proxies:
       - "JP-TUIC"
       - "JP1-Reality"
+      - "JP-Hysteria2"
 
   # Manual selection with AUTO-FAST as default
   - name: "PROXY"
@@ -224,15 +225,15 @@ proxy-groups:
     proxies:
       - "JP1-Reality"
 
-  # === PHASE 7H: Phone-only fallback group (TUIC>HY2>JP1-Reality) ===
+  # === PHASE 7H: Phone-only fallback group (JP1-Reality first — TUIC causes YouTube failures) ===
   - name: "PHONE-FAST"
     type: fallback
     url: https://connectivitycheck.gstatic.com/generate_204
     interval: 180
     proxies:
+      - "JP1-Reality"
       - "JP-TUIC"
       - "JP-Hysteria2"
-      - "JP1-Reality"
 
 
   # === PHASE 7J: Shield-pinned group (HOLY — never route shield elsewhere) ===
@@ -260,6 +261,11 @@ rules:
   # === END CRL/OCSP FIX ===
   # === PHASE 7J: Shield pinned — HOLY — DO NOT MOVE OR REMOVE ===
   - SRC-IP-CIDR,192.168.111.183/32,SHIELD-STABLE
+  # === PHASE 11: LAN-wide QUIC block (Council R7: force TCP fallback, all devices) ===
+  # Shield (183) is safe: its rule above matches first, routes to SHIELD-STABLE
+  # All other LAN devices: QUIC (UDP 443) rejected → forces TCP fallback
+  # Prevents QUIC-in-QUIC MTU fragmentation when tunneled through TUIC proxy
+  - AND,((NETWORK,UDP),(DST-PORT,443)),REJECT
   # === PHASE 7H-B1: iPhone Apple services via PHONE-FAST (proxy in CN) ===
   - AND,((SRC-IP-CIDR,192.168.111.157/32),(DOMAIN-SUFFIX,apple.com)),PHONE-FAST
   - AND,((SRC-IP-CIDR,192.168.111.157/32),(DOMAIN-SUFFIX,icloud.com)),PHONE-FAST
@@ -547,5 +553,7 @@ rules:
   # All proxy-needed services (Google, YouTube, OpenAI, Twitter, Telegram, Meta, etc.)
   # are caught by explicit rules above. What reaches here from the laptop is safely DIRECT.
   - SRC-IP-CIDR,192.168.111.181/32,DIRECT
+  # === VPS DIRECT (council-approved: 177ms direct vs 348ms proxied — 2x faster) ===
+  - IP-CIDR,5.75.182.153/32,DIRECT
   # === EVERYTHING ELSE THROUGH PROXY ===
   - MATCH,PROXY

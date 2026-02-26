@@ -105,10 +105,13 @@ When a site is blocked by GFW and needs routing through proxy:
 **Rule placement guide (config.yaml rules section, top to bottom):**
 ```
 CRL/OCSP revocation rules         ← HIGHEST priority, route via PROXY
-SHIELD-STABLE per-device rule     ← never move
+SHIELD-STABLE per-device rule     ← never move (SRC-IP-CIDR,183)
+LAN-wide QUIC block               ← AND,((NETWORK,UDP),(DST-PORT,443)),REJECT
+Phone PHONE-FAST rules            ← SRC-IP AND DOMAIN-SUFFIX combos
 Per-device rules (phones etc)
 AI services (claude.ai, chatgpt.com → AI-PINNED)
 CDN domains (githubassets, discordapp.net, etc → PROXY)
+VPS DIRECT rule                   ← IP-CIDR,5.75.182.153/32,DIRECT
 GEOSITE,CN,DIRECT                 ← China sites go direct
 GEOSITE,GFW,PROXY                 ← GFW catch-all (~5000 domains)
 Laptop DIRECT catch-all           ← torrent bandwidth saver
@@ -255,3 +258,6 @@ ssh -p 2226 root@127.0.0.1 'grep "dns-query#" /etc/openclash/config/config.yaml 
 8. **Rescue IPs (.254/.253/.252/.251) must always exist on br-lan**
 9. **DoH tags must use `#JP1-Reality`** — NEVER switch to `#JP-TUIC` (UDP throttling)
 10. **CRL/OCSP rules must be at TOP of rules section** — prevents GFW DNS poisoning trap
+11. **QUIC (UDP 443) must be blocked LAN-wide** — QUIC-in-QUIC through TUIC proxy causes MTU fragmentation. Block in `openclash_mangle` chain (NOT forward — tproxy bypasses forward). Shield is safe: its SRC-IP rule matches before the QUIC REJECT rule.
+12. **PHONE-FAST must use JP1-Reality first** — JP-TUIC causes YouTube failures even with QUIC blocked. Shield TV proves JP1-Reality delivers 1080p video despite misleading latency probes.
+13. **Hysteria2 needs Salamander obfuscation** — bare QUIC is fingerprinted by GFW within ~30s on China Telecom. Ask Henry to enable it on the JP VPS.
