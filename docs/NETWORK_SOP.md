@@ -258,6 +258,8 @@ ssh -p 2226 root@127.0.0.1 'grep "dns-query#" /etc/openclash/config/config.yaml 
 8. **Rescue IPs (.254/.253/.252/.251) must always exist on br-lan**
 9. **DoH tags must use `#JP1-Reality`** — NEVER switch to `#JP-TUIC` (UDP throttling)
 10. **CRL/OCSP rules must be at TOP of rules section** — prevents GFW DNS poisoning trap
-11. **QUIC (UDP 443) must be blocked LAN-wide** — QUIC-in-QUIC through TUIC proxy causes MTU fragmentation. Block in `openclash_mangle` chain (NOT forward — tproxy bypasses forward). Shield is safe: its SRC-IP rule matches before the QUIC REJECT rule.
-12. **PHONE-FAST must use JP1-Reality first** — JP-TUIC causes YouTube failures even with QUIC blocked. Shield TV proves JP1-Reality delivers 1080p video despite misleading latency probes.
+11. **QUIC block must be AFTER all phone rules** — phones use JP1-Reality (TCP), so their QUIC is safe to proxy. The QUIC block must sit after the last phone catch-all so phones reach PHONE-FAST first. Only non-phone devices (laptop, IoT) are force-TCP'd by the block.
+12. **PHONE-FAST must use JP1-Reality first** — JP-TUIC causes YouTube failures (QUIC-in-QUIC MTU fragmentation). Shield TV proves JP1-Reality delivers 1080p video despite misleading latency probes.
 13. **Hysteria2 needs Salamander obfuscation** — bare QUIC is fingerprinted by GFW within ~30s on China Telecom. Ask Henry to enable it on the JP VPS.
+14. **Telegram DC IPs need explicit IP-CIDR rules** — Telegram clients bypass DNS and dial DC IPs directly (149.154.x.x, 91.108.x.x). fake-IP cannot intercept raw IP connections. Without explicit rules they hit the laptop DIRECT rule and get GFW-blocked.
+15. **App connection state cache** — when a fix is applied, apps may still show "no connection" due to cached failed DNS/TCP state. Fix: disable WiFi, connect via mobile data + Singbox, load the app, then switch back to WiFi.

@@ -261,11 +261,6 @@ rules:
   # === END CRL/OCSP FIX ===
   # === PHASE 7J: Shield pinned — HOLY — DO NOT MOVE OR REMOVE ===
   - SRC-IP-CIDR,192.168.111.183/32,SHIELD-STABLE
-  # === PHASE 11: LAN-wide QUIC block (Council R7: force TCP fallback, all devices) ===
-  # Shield (183) is safe: its rule above matches first, routes to SHIELD-STABLE
-  # All other LAN devices: QUIC (UDP 443) rejected → forces TCP fallback
-  # Prevents QUIC-in-QUIC MTU fragmentation when tunneled through TUIC proxy
-  - AND,((NETWORK,UDP),(DST-PORT,443)),REJECT
   # === PHASE 7H-B1: iPhone Apple services via PHONE-FAST (proxy in CN) ===
   - AND,((SRC-IP-CIDR,192.168.111.157/32),(DOMAIN-SUFFIX,apple.com)),PHONE-FAST
   - AND,((SRC-IP-CIDR,192.168.111.157/32),(DOMAIN-SUFFIX,icloud.com)),PHONE-FAST
@@ -370,6 +365,10 @@ rules:
   - SRC-IP-CIDR,192.168.111.156/32,PHONE-FAST  # S8
   - SRC-IP-CIDR,192.168.111.155/32,PHONE-FAST  # S8+
   - SRC-IP-CIDR,192.168.111.157/32,PHONE-FAST  # iPhone
+  # === PHASE 11: LAN-wide QUIC block (Council R7+R10: after phone rules so phones use QUIC via JP1-Reality) ===
+  # Shield (183) matches before phone rules — safe. Phones match their rules above — safe.
+  # All remaining devices (laptop, IoT): QUIC (UDP 443) rejected → forces TCP fallback
+  - AND,((NETWORK,UDP),(DST-PORT,443)),REJECT
   - DOMAIN,connectivitycheck.gstatic.com,AUTO-FAST  # Phase6AA android-validate
   # === PHASE 6Z: Samsung captive portal → PROXY (phone-only in practice) ===
   - DOMAIN,captive.samsungconnectivity.com,PROXY
@@ -552,6 +551,18 @@ rules:
   # === PHASE 8C: Laptop unknown traffic DIRECT (torrent peers, unlisted foreign IPs) ===
   # All proxy-needed services (Google, YouTube, OpenAI, Twitter, Telegram, Meta, etc.)
   # are caught by explicit rules above. What reaches here from the laptop is safely DIRECT.
+  # === PHASE 11B: Telegram DC IPs (Council R9: hardcoded IPs bypass fake-IP, must be explicit) ===
+  # Telegram clients dial DC IPs directly without DNS — fake-IP can't intercept them
+  # Without these rules, laptop Telegram DC connections hit SRC-IP DIRECT and get GFW-blocked
+  - IP-CIDR,149.154.160.0/20,PROXY,no-resolve
+  - IP-CIDR,91.108.4.0/22,PROXY,no-resolve
+  - IP-CIDR,91.108.8.0/22,PROXY,no-resolve
+  - IP-CIDR,91.108.12.0/22,PROXY,no-resolve
+  - IP-CIDR,91.108.16.0/22,PROXY,no-resolve
+  - IP-CIDR,91.108.20.0/22,PROXY,no-resolve
+  - IP-CIDR,91.108.56.0/22,PROXY,no-resolve
+  - IP-CIDR,91.105.192.0/23,PROXY,no-resolve
+  - IP-CIDR,185.76.151.0/24,PROXY,no-resolve
   - SRC-IP-CIDR,192.168.111.181/32,DIRECT
   # === VPS DIRECT (council-approved: 177ms direct vs 348ms proxied — 2x faster) ===
   - IP-CIDR,5.75.182.153/32,DIRECT
