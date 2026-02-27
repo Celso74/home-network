@@ -28,9 +28,9 @@ Config changes are reviewed by a 5-model AI council (Claude + 4 external models)
 
 ```bash
 # From VPS (core-vps-1 / 5.75.182.153)
-ssh -p 2223 root@localhost          # N100
-ssh -p 2226 celso@localhost         # Laptop
-ssh -p 2231 admin@localhost         # MikroTik
+ssh -p 2226 root@127.0.0.1         # N100
+ssh -p 2228 celso@127.0.0.1        # Laptop
+ssh -p 2227 admin@127.0.0.1        # MikroTik
 
 # From laptop on LAN
 ssh root@192.168.100.1              # N100 (eth3 cable)
@@ -67,7 +67,7 @@ echo "=== JP1-Reality delay ===" && \
     -H 'Authorization: Bearer lBJEqlqp' | grep -o '"delay":[0-9]*' | tail -1
 
 echo "=== br-wan (must have NO IP) ===" && \
-  ssh -p 2223 root@localhost "ip addr show br-wan | grep inet || echo CLEAN"
+  ssh -p 2226 root@127.0.0.1 "ip addr show br-wan | grep inet || echo CLEAN"
 ```
 
 **Expected:**
@@ -261,5 +261,58 @@ ssh -p 2226 root@127.0.0.1 'grep "dns-query#" /etc/openclash/config/config.yaml 
 11. **QUIC block must be AFTER all phone rules** — phones use JP1-Reality (TCP), so their QUIC is safe to proxy. The QUIC block must sit after the last phone catch-all so phones reach PHONE-FAST first. Only non-phone devices (laptop, IoT) are force-TCP'd by the block.
 12. **PHONE-FAST must use JP1-Reality first** — JP-TUIC causes YouTube failures (QUIC-in-QUIC MTU fragmentation). Shield TV proves JP1-Reality delivers 1080p video despite misleading latency probes.
 13. **Hysteria2 needs Salamander obfuscation** — bare QUIC is fingerprinted by GFW within ~30s on China Telecom. Ask Henry to enable it on the JP VPS.
-14. **Telegram DC IPs need explicit IP-CIDR rules** — Telegram clients bypass DNS and dial DC IPs directly (149.154.x.x, 91.108.x.x). fake-IP cannot intercept raw IP connections. Without explicit rules they hit the laptop DIRECT rule and get GFW-blocked.
+14. **Telegram DC IPs need BOTH N100 rules AND MikroTik routes** — Telegram hardcodes DC IPs (149.154.x.x, 91.108.x.x). The architecture uses MikroTik as the LAN gateway, only routing 198.18.0.0/15 (fake-IP) to N100. Hardcoded IP traffic bypasses N100 entirely and hits GFW. Fix: add explicit MikroTik routes for each DC CIDR → gateway 192.168.111.2. See "Hardcoded IP Services" section.
 15. **App connection state cache** — when a fix is applied, apps may still show "no connection" due to cached failed DNS/TCP state. Fix: disable WiFi, connect via mobile data + Singbox, load the app, then switch back to WiFi.
+16. **MikroTik Phase2 routing architecture** — MikroTik is the default gateway for ALL LAN clients. It only routes fake-IP range (198.18.0.0/15) to N100 via the "Phase2-FakeIP-to-N100" static route. All other traffic goes directly to ISP (192.168.71.1). Any app/service using hardcoded IPs that are GFW-blocked needs an explicit MikroTik route to N100. This includes Telegram DCs, and potentially other services. See rollback: `/ip route remove [find where comment~"your comment"]`
+
+---
+
+## Hardcoded IP Services (MikroTik Routes Required)
+
+Services that bypass DNS and use hardcoded IPs need MikroTik routes → N100 to be proxied.
+
+### Architecture Reminder
+```
+LAN clients → MikroTik (192.168.111.1) → ISP (192.168.71.1)
+                    ↓ (only 198.18.0.0/15)
+                   N100 (192.168.111.2) → OpenClash → JP1-Reality
+```
+Domain-based traffic: DNS returns fake-IP (198.18.x.x) → MikroTik routes to N100 ✅
+Hardcoded IP traffic: No fake-IP → MikroTik sends direct to ISP → GFW blocks ❌
+
+### Telegram DC Routes (Applied 2026-02-27)
+
+```routeros
+# Add to MikroTik:
+/ip route add dst-address=149.154.160.0/20 gateway=192.168.111.2 comment="Telegram DC -> N100 Proxy"
+/ip route add dst-address=91.108.4.0/22 gateway=192.168.111.2 comment="Telegram DC -> N100 Proxy"
+/ip route add dst-address=91.108.8.0/22 gateway=192.168.111.2 comment="Telegram DC -> N100 Proxy"
+/ip route add dst-address=91.108.12.0/22 gateway=192.168.111.2 comment="Telegram DC -> N100 Proxy"
+/ip route add dst-address=91.108.16.0/22 gateway=192.168.111.2 comment="Telegram DC -> N100 Proxy"
+/ip route add dst-address=91.108.20.0/22 gateway=192.168.111.2 comment="Telegram DC -> N100 Proxy"
+/ip route add dst-address=91.108.56.0/22 gateway=192.168.111.2 comment="Telegram DC -> N100 Proxy"
+/ip route add dst-address=91.105.192.0/23 gateway=192.168.111.2 comment="Telegram DC -> N100 Proxy"
+/ip route add dst-address=185.76.151.0/24 gateway=192.168.111.2 comment="Telegram DC -> N100 Proxy"
+
+# Verify:
+/ip route print where comment~"Telegram"
+
+# Rollback:
+/ip route remove [find where comment~"Telegram DC -> N100 Proxy"]
+```
+
+> **Also required in N100/Mihomo config:** `IP-CIDR,149.154.160.0/20,PROXY,no-resolve` etc.
+> Both MikroTik routes AND Mihomo IP-CIDR rules are needed — routes bring traffic to N100, rules route it via PROXY.
+
+### Diagnosing Broken Hardcoded IP Services
+
+```bash
+# Check if traffic reaches N100 at all:
+tail -f /tmp/openclash.log | grep "IP_ADDRESS"  # If empty, not reaching N100
+
+# Check laptop's default gateway (should be MikroTik):
+# Windows: route print 0.0.0.0
+
+# Add MikroTik route for the problematic CIDR, then test again
+```
+
