@@ -261,6 +261,8 @@ rules:
   # === END CRL/OCSP FIX ===
   # === PHASE 7J: Shield pinned — HOLY — DO NOT MOVE OR REMOVE ===
   - SRC-IP-CIDR,192.168.111.183/32,SHIELD-STABLE
+  # === Ayi's phone (192.168.111.154): CN internet only, DIRECT ===
+  - SRC-IP-CIDR,192.168.111.154/32,DIRECT
   # === PHASE 7H-B1: iPhone Apple services via PHONE-FAST (proxy in CN) ===
   - AND,((SRC-IP-CIDR,192.168.111.157/32),(DOMAIN-SUFFIX,apple.com)),PHONE-FAST
   - AND,((SRC-IP-CIDR,192.168.111.157/32),(DOMAIN-SUFFIX,icloud.com)),PHONE-FAST
